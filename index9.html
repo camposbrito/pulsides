@@ -94,11 +94,11 @@ Falar Conosco
 <section class="hero-bg text-white min-h-screen flex items-center">
 <div class="max-w-5xl mx-auto px-6 fade-up">
 
-<h1 class="text-5xl md:text-7xl font-light leading-tight mb-8">
+<h1 id="heroTitle" class="text-5xl md:text-7xl font-light leading-tight mb-8">
 Pulsides Gestão Condominial
 </h1>
 
-<p class="text-xl md:text-2xl opacity-90 max-w-3xl mb-12">
+<p id="heroText" class="text-xl md:text-2xl opacity-90 max-w-3xl mb-12">
 Gestão Humanizada, presença real e resultados concretos.
 </p>
 
@@ -106,6 +106,20 @@ Gestão Humanizada, presença real e resultados concretos.
 class="bg-white text-primary px-10 py-4 rounded-full font-semibold text-lg hover:bg-gray-200 transition">
 Solicitar Atendimento
 </a>
+
+<div class="mt-10 flex items-center gap-4">
+<button id="heroPrev"
+class="w-10 h-10 rounded-full border border-white/70 text-white hover:bg-white/20 transition"
+aria-label="Slide anterior">
+&#8592;
+</button>
+<button id="heroNext"
+class="w-10 h-10 rounded-full border border-white/70 text-white hover:bg-white/20 transition"
+aria-label="Próximo slide">
+&#8594;
+</button>
+<div id="heroDots" class="flex items-center gap-2"></div>
+</div>
 
 </div>
 </section>
@@ -269,6 +283,65 @@ scrollTopBtn.classList.add("hidden");
 scrollTopBtn.addEventListener("click", () => {
 window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+const heroSlides = [
+{
+title: "Pulsides Gestão Condominial",
+text: "Gestão Humanizada, presença real e resultados concretos."
+},
+{
+title: "Síndico Profissional Presente",
+text: "Acompanhamento próximo da rotina do condomínio, com decisões equilibradas."
+},
+{
+title: "Gestão Técnica e Responsável",
+text: "Planejamento financeiro, controle orçamentário e foco na valorização patrimonial."
+}
+];
+
+const heroTitle = document.getElementById("heroTitle");
+const heroText = document.getElementById("heroText");
+const heroPrev = document.getElementById("heroPrev");
+const heroNext = document.getElementById("heroNext");
+const heroDots = document.getElementById("heroDots");
+let heroIndex = 0;
+let heroTimer;
+
+heroSlides.forEach((_, index) => {
+const dot = document.createElement("button");
+dot.className = "w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition";
+dot.setAttribute("aria-label", "Ir para slide " + (index + 1));
+dot.addEventListener("click", () => setHeroSlide(index));
+heroDots.appendChild(dot);
+});
+
+function setHeroSlide(index) {
+heroIndex = (index + heroSlides.length) % heroSlides.length;
+heroTitle.textContent = heroSlides[heroIndex].title;
+heroText.textContent = heroSlides[heroIndex].text;
+Array.from(heroDots.children).forEach((dot, i) => {
+dot.classList.toggle("bg-white", i === heroIndex);
+dot.classList.toggle("bg-white/40", i !== heroIndex);
+});
+}
+
+function startHeroAutoPlay() {
+clearInterval(heroTimer);
+heroTimer = setInterval(() => setHeroSlide(heroIndex + 1), 6000);
+}
+
+heroPrev.addEventListener("click", () => {
+setHeroSlide(heroIndex - 1);
+startHeroAutoPlay();
+});
+
+heroNext.addEventListener("click", () => {
+setHeroSlide(heroIndex + 1);
+startHeroAutoPlay();
+});
+
+setHeroSlide(0);
+startHeroAutoPlay();
 </script>
 
 </body>
